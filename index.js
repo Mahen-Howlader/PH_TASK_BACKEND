@@ -5,7 +5,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 require("dotenv").config()
 const corsOptions = {
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: ['https://66c05811b5731c3071cdbfc5--iridescent-cucurucho-46ae70.netlify.app'],
   credentials: true,
   optionSuccessStatus: 200,
 }
@@ -18,7 +18,7 @@ app.use(express.json())
 
 // mongodb
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://ecommerce:cXwnbkw6PoUvc1GF@cluster0.iagloem.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = `mongodb+srv://${process.env.BD_USER}:${process.env.BD_PASSWORD}@cluster0.iagloem.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 
@@ -42,7 +42,7 @@ async function run() {
 
     app.get("/populardata", async (req, res) => {
       const { sort } = req?.query;
-      const query = {};
+      const query = {}; 
       const options = {
         new_price : sort === "asc" ? 1 : -1
       }
