@@ -5,7 +5,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 require("dotenv").config()
 const corsOptions = {
-  origin: ['https://66c05811b5731c3071cdbfc5--iridescent-cucurucho-46ae70.netlify.app'],
+  origin: ['https://66c05811b5731c3071cdbfc5--iridescent-cucurucho-46ae70.netlify.app', "http://localhost:5173"],
   credentials: true,
   optionSuccessStatus: 200,
 }
@@ -41,12 +41,15 @@ async function run() {
 
 
     app.get("/populardata", async (req, res) => {
-      const { sort } = req?.query;
-      const query = {}; 
-      const options = {
-        new_price : sort === "asc" ? 1 : -1
-      }
-      const result = await allProduct.find(query, options).toArray()
+      // const { sort } = req?.query;
+      // const query = {}; 
+      // const options = {
+      //   new_price : sort === "asc" ? 1 : -1
+      // }
+      const page = parseInt(req.query.page);
+      const size = parseInt(req.query.size);
+      console.log(req.query)
+      const result = await allProduct.find().skip(page * size).limit(size).toArray()
       res.send(result)
     })
 
