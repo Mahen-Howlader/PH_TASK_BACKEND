@@ -4,8 +4,11 @@ const mongodb = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 require("dotenv").config()
+
+
+
 const corsOptions = {
-  origin: ['https://66c05811b5731c3071cdbfc5--iridescent-cucurucho-46ae70.netlify.app', "http://localhost:5173"],
+  origin: [ "http://localhost:5173"],
   credentials: true,
   optionSuccessStatus: 200,
 }
