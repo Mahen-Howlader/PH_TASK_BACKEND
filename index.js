@@ -41,29 +41,43 @@ async function run() {
 
 
     app.get("/populardata", async (req, res) => {
-      // const { sort } = req?.query;
-      // const query = {}; 
-      // const options = {
-      //   new_price : sort === "asc" ? 1 : -1
-      // }
       const page = parseInt(req.query.page);
       const size = parseInt(req.query.size);
 
       const search = req.query.search || "";
       const sort = req.query.sort || "";
+      const filterBrand = req.query.filterBrand || "";
+      const filterCate = req.query.filterCate || "";
+      const filterRange = req.query.filterRange || "";
 
+      console.log(req.query);
+
+      // Initialize the query object
       const query = {
         name: {
           $regex: search,
           $options: "i"
         }
+      };
+
+      // Apply filters if they exist
+      if (filterBrand) {
+        query.brand_name = filterBrand;
       }
-      // const options = {
-      //   new_price : sort === "asc" ? 1 : -1
-      // }
+      if (filterRange) {
+        console.log(filterRange)
+        const [minPrice, maxPrice] = filterRange.split("-").map(Number);
+
+        query.new_price = {
+          $gte: minPrice,
+          $lte: maxPrice
+        };
+      }
+      if (filterCate) {
+        query.category = filterCate;
+      }
 
       let apiData = allProduct.find(query).skip(page * size).limit(size);
-
 
       // Apply sorting based on the `sort` parameter
       if (sort === "priceHighToLow") {
@@ -81,7 +95,7 @@ async function run() {
         console.error("Error fetching data:", error);
         res.status(500).send("Internal Server Error");
       }
-    })
+    });
 
 
     app.get("/kidscollection", async (req, res) => {
