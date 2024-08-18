@@ -1,21 +1,21 @@
-const express = require("express")
-const cors = require("cors")
+const express = require("express");
+const cors = require("cors");
 const mongodb = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
-require("dotenv").config()
+require("dotenv").config();
 
-
-
+// CORS configuration
 const corsOptions = {
-  origin: [ "http://localhost:5173"],
-  credentials: true,
-  optionSuccessStatus: 200,
-}
+  origin: ["http://localhost:5173", "https://66c1fceb20254e910852e4f8--iridescent-cucurucho-46ae70.netlify.app"],  // Allow only your local frontend
+  credentials: true,  // Allow credentials like cookies to be sent
+  optionsSuccessStatus: 200,  // Some legacy browsers choke on 204
+};
 
-// middleware
-app.use(cors(corsOptions))
-app.use(express.json())
+// Middleware
+app.use(cors(corsOptions));  // Enable CORS with the specified options
+app.use(express.json());  // Parse incoming JSON requests
+
 
 
 
