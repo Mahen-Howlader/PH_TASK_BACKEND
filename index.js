@@ -48,16 +48,39 @@ async function run() {
       // }
       const page = parseInt(req.query.page);
       const size = parseInt(req.query.size);
-      const search = req.query.search;
+
+      const search = req.query.search || "";
+      const sort = req.query.sort || "";
+
       const query = {
         name: {
           $regex: search,
-          $options : "i"
+          $options: "i"
         }
       }
-      console.log(req.query)
-      const result = await allProduct.find(query).skip(page * size).limit(size).toArray()
-      res.send(result)
+      // const options = {
+      //   new_price : sort === "asc" ? 1 : -1
+      // }
+
+      let apiData = allProduct.find(query).skip(page * size).limit(size);
+
+
+      // Apply sorting based on the `sort` parameter
+      if (sort === "priceHighToLow") {
+        apiData = apiData.sort({ "new_price": -1 }); // Sort by price descending
+      } else if (sort === "priceLowToHigh") {
+        apiData = apiData.sort({ "new_price": 1 }); // Sort by price ascending
+      } else if (sort === "newestDate") {
+        apiData = apiData.sort({ "creation_date_time": -1 }); // Sort by newest date first
+      }
+
+      try {
+        const result = await apiData.toArray();
+        res.send(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        res.status(500).send("Internal Server Error");
+      }
     })
 
 
